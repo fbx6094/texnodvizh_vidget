@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="style.css">
+  <title>Vidget</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      overflow: hidden;
+    }
+
+    .loader {
+      width: 455px;
+      margin: 0 auto 70px;
+      border: 2px;
+      border-color: black;
+      position: absolute;
+      display: none;
+    }
+
+    .loader .loading_1:before {
+      z-index: 4;
+      content: "";
+      display: block;
+      position: absolute;
+      left: -30px;
+      /* transform: translate(-50%); */
+      border-radius: 16px;
+      border-radius: 16px;
+      border: 2px;
+      border-color: black;
+      width: 0;
+      height: 61px;
+      background-color: #12B72D;
+      opacity: 0.8;
+      animation: load 131s linear infinite;
+      animation: load 131s linear infinite;
+      animation-iteration-count: 1;
+    }
+
+    @keyframes load {
+      0% {
+        width: 100%;
+      }
+
+      100% {
+        width: 0%;
+      }
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        top: 10px;
+
+      }
+
+      12.5% {
+        top: 30px;
+      }
+    }
+
+    #timer {
+      display: none;
+    }
+
+    #timeroff {
+      display: none;
+    }
+
+    #timeroff {
+      display: none;
+    }
+  </style>
+  <script>
+    // console.error = function () { };
+    let prev = 0;
+    let ttx = 1;
+    let anybuttonclicked;
+    // function checkScore() {
+    //     const checkScoreInterval = setInterval(async () => {
+    //         try {
+    //             const response = await fetch('http://localhost:5501/check-score');
+    //             const data = await response.text();
+    //             // console.log(data);
+    //             if (prev != data) {
+    //                 anybuttonclicked = false;
+    //                 // console.log("prev != data");
+    //                 // prev = data;
+    //             }
+    //             if (anybuttonclicked == true) {
+    //                 return 0;
+    //             }
+    //             if (data === prev) {
+    //                 return;
+    //             }
+    //             if (anybuttonclicked == false) {
+    //                 // clearInterval(checkScoreInterval);
+    //                 // anybuttonclicked = false;
+    //                 if (data === '1') {
+    //                     anybuttonclicked = true;
+    //                     prev = data;
+    //                     showItogo();
+    //                 } else if (data === '0') {
+    //                     anybuttonclicked = true;
+    //                     // window.location.reload();
+    //                     prev = data;
+    //                     restart();
+    //                     // const myButton = document.getElementById('button_state_1');
+    //                     // myButton.click();
+    //                 } else if (data === '2') {
+    //                     anybuttonclicked = true;
+    //                     prev = data;
+    //                     showwinner();
+    //                     // const myButton = document.getElementById('rtr');
+    //                     // myButton.click();
+    //                 } else if (data === '3') {
+    //                     anybuttonclicked = true;
+    //                     prev = data;
+    //                     showloading();
+    //                     // const myButton = document.getElementById('loading_next');
+    //                     // myButton.click();
+    //                 }
+    //             };
+    //         } catch (ttx) {
+    //             // console.log("testx");
+    //             // console.error();
+    //             // console.clear();
+
+    //         };
+    //     }, 500); // check every 3 seconds
+    // };
+    // console.error = function () { };
+    let prev_timer = 2;
+    let timerToggled;
+    function checkTimer() {
+      const checkTimerInterval = setInterval(async () => {
+        try {
+          const response = await fetch('http://192.168.217.16:5500/check-timer');
+          const data_timer = await response.text();
+          // timer_start_from_cpl();
+          // console.log(data_timer);
+          if (prev_timer != data_timer) {
+            timerToggled = false;
+            // console.log("prev_timer != data_timer");
+            // prev_timer = data_timer;
+          }
+          if (timerToggled == true) {
+            return 0;
+          }
+          if (data_timer === prev_timer) {
+            return;
+          }
+          if (timerToggled == false) {
+            // clearInterval(checkScoreInterval);
+            // timerToggled = false;
+            if (data_timer === '1') {
+              timerToggled = true;
+              prev_timer = data_timer;
+              timer_start_from_cpl();
+            }else if (data_timer === '2') {
+              timerToggled = true;
+              prev_timer = data_timer;
+              restart();
+            }
+          };
+        } catch (ttx) {
+          // console.error();
+          // console.log("testx");
+          // console.clear();
+        };
+      }, 500); // check every 3 seconds
+    };
+  </script>
+</head>
+<!-- <section>
+  <font face='Proxima Nova'>120:124</font>
+
+</section> -->
+
+<body style="font-family:Proxima Nova;">
+  <!-- <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> -->
+
+
+  <div class="app" id="app">
+
+    <div class="top_backrground"></div>
+    <div class="bottom_background"></div>
+    <div class="table_row">
+      <div class="item_for_widing w-300">{{data.name_team_1}}</div>
+      <div class="item_for_widing w-300">{{data.name_team_2}}</div>
+    </div>
+    <!-- <div class="first_team_name">{{ data.name_team_1 }}</div>
+    <div class="second_team_name">{{ data.name_team_2 }}</div> -->
+    <div class="backround_for_score"></div>
+    <div class="score">{{data.score_team_1 + ":" + data.score_team_2}}</div>
+    <div class="app" id="app">
+      <audio id="sound" src="/src/snd.mp3" preload="auto"></audio>
+      <div class="item">
+        <div class="timer_background">
+          <div class="loader" id="loader">
+            <div class="loading_1"></div>
+          </div>
+        </div>
+        <div class="timer">
+          <span id="startbtn" style="font-size: 35px; color: rgb(0, 190, 0);">Матч скоро начнётся!</span>
+          <span id="timeroff" style="font-size: 35px;">Время истекло!</span>
+          <h1 id="timer"
+            style=" font-weight: bold; font-size: larger; z-index: 11; position: absolute;  left: 50%; transform: translate(-50%);">
+            02:00
+          </h1>
+        </div>
+      </div>  
+    </div>
+
+    <div class="container_for_top_titles">
+      <!-- <div class="timer">{{minutes+':'+seconds}}</div> -->
+      <!-- <div class="timer" id="timer">02:00</div> -->
+      <!-- <div class="timer">2:00</div> -->
+      <div class="first_title">Робототехнический турнир “ТЕХНОДВИЖ” 2023/2024</div>
+      <!-- <img src="/images/logo.png" width="100" height="100" style="position: absolute; top: 8%;" /> -->
+      <div class="separator" style="position: absolute; top: .5%; left: 31%;"></div>
+      <!-- <img src="палочка.png" style= "position: relative; top:-20px;right:-290px;"/> -->
+      <img src="/images/invisible.png" style="position: relative;top: 825px; left:-20px" />
+      <div class="second_title">Товарищеский турнир ЗАО</div>
+      <!-- <img src="палочка.png" style= "position: relative; top:-20px;right:-65px;"/> -->
+      <div class="separator" style="position: absolute; top: .5%; left: 69%;"></div>
+      <div class="third_title">Финал</div>
+
+
+      <!-- <img src="/images/logo2.png" style="position: absolute;  left: 95.4%; top: 8%; " /> -->
+
+    </div>
+    <div class="streets_container" style="position: absolute; top: 84%; left: 20%">
+      <div class="houses_container">
+        <div :class="data.team_1_score_street_1 == '4' ? 'triangle_green': 'triangle'"></div>
+        <div class="house_white" v-for="house in 4-data.team_1_score_street_1"></div>
+        <div class="house_green" v-for="house in data.team_1_score_street_1"></div>
+        <div class="street_label">ул.Медиа</div>
+      </div>
+      <div class="houses_container">
+        <div :class="data.team_1_score_street_2 == '4' ? 'triangle_green': 'triangle'"></div>
+        <div class="house_white" v-for="house in 4-data.team_1_score_street_2"></div>
+        <div class="house_green" v-for="house in data.team_1_score_street_2"></div>
+        <div class="street_label">ул.Первых</div>
+      </div>
+      <div class="houses_container">
+        <div :class="data.team_1_score_street_3 == '4' ? 'triangle_green': 'triangle'"></div>
+        <div class="house_white" v-for="house in 4-data.team_1_score_street_3"></div>
+        <div class="house_green" v-for="house in data.team_1_score_street_3"></div>
+        <div class="street_label">ул.Истории</div>
+      </div>
+    </div>
+
+    <div class="streets_container" style="position: absolute; top: 84%; left: 68%">
+      <div class="houses_container">
+        <div :class="data.team_2_score_street_1 == '4' ? 'triangle_green': 'triangle'"></div>
+        <div class="house_white" v-for="house in 4-data.team_2_score_street_1"></div>
+        <div class="house_green" v-for="house in data.team_2_score_street_1"></div>
+        <div class="street_label">ул.Медиа</div>
+      </div>
+      <div class="houses_container">
+        <div :class="data.team_2_score_street_2 == '4' ? 'triangle_green': 'triangle'"></div>
+        <div class="house_white" v-for="house in 4-data.team_2_score_street_2"></div>
+        <div class="house_green" v-for="house in data.team_2_score_street_2"></div>
+        <div class="street_label">ул.Первых</div>
+      </div>
+      <div class="houses_container">
+        <div :class="data.team_2_score_street_3 == '4' ? 'triangle_green': 'triangle'"></div>
+        <div class="house_white" v-for="house in 4-data.team_2_score_street_3"></div>
+        <div class="house_green" v-for="house in data.team_2_score_street_3"></div>
+        <div class="street_label">ул.Истории</div>
+      </div>
+    </div>
+  </div>
+  <!-- <script src="script.js"></script> -->
+  <script>
+    // src = 'script.js';
+    console.error = function () { };
+    // setInterval(checkScore, 250);
+    setInterval(checkTimer, 250);
+    const { onMounted, createApp, ref } = Vue;
+    createApp({
+      setup() {
+        const message = ref("Hello vue!");
+        const data = ref({
+          final_winner: "null",
+          id: "adsadsadsadasdasd",
+          score_team_1: "0",
+          name_team_1: "Name 1",
+          score_team_2: "0",
+          name_team_2: "Name 2",
+          timer: true,
+          timer_start: "2018-25-12 23:50:55",
+          timer_end: "2018-25-12 23:50:55",
+          team_1_score_street_1: 0,
+          team_1_score_street_2: 0,
+          team_1_score_street_3: 0,
+          team_2_score_street_1: 0,
+          team_2_score_street_2: 0,
+          team_2_score_street_3: 0,
+          team_score_street_main: 0,
+          progress_bar_state: 0,
+          state_of_vidget: 0,
+          final_winner_score: 0,
+        });
+        const fetchData = () => {
+          setInterval(() => {
+            fetch("http://193.164.149.85:5000/scores").then((result) =>
+
+              //fetch("http://185.68.22.42:3000/scores").then((result) =>
+              result.json().then((res) => {
+                data.value = res[0];
+              })
+            );
+          }, 100); // Обновление каждые n секунды
+        };
+        fetchData();
+
+        const seconds = ref(30);
+        onMounted(() => {
+          setInterval(() => {
+            seconds.value -= 1;
+          }, 1000);
+        });
+        const minutes = ref(2);
+        onMounted(() => {
+          setInterval(() => {
+            minutes.value -= 1;
+          }, 60000);
+        });
+        return {
+          message,
+          data,
+          seconds,
+          minutes,
+        };
+      },
+    }).mount('#app')
+
+
+
+
+    //таймер авто
+
+    function timer_start_from_cpl() {
+      var button = document.getElementById("startbtn");
+      var timer = document.getElementById("timer");
+      var loader = document.getElementById("loader");
+      var timerof = document.getElementById("timeroff");
+      function button_hide() {
+        button.style.display = "none";
+        timer.style.display = "block";
+        loader.style.display = "block";
+
+      }
+      function backtostart() {
+        timerof.style.display = "none";
+        button.style.display = "block";
+      }
+      function timeroff() {
+        timerof.style.display = 'block';
+        timer.style.display = 'none';
+      }
+      function timerfnc() {
+        // Устанавливаем время в секундах
+        var timeLeft = 120;
+
+        // Функция для обновления таймера
+        function updateTimer() {
+          // Получаем элемент с id "timer"
+          var timerElement = document.getElementById("timer");
+
+          // Вычисляем минуты и секунды
+          var minutes = Math.floor(timeLeft / 60);
+          var seconds = timeLeft % 60;
+
+          // Добавляем ведущий ноль, если значение минут или секунд меньше 10
+          var formattedMinutes = ("0" + minutes).slice(-2);
+          var formattedSeconds = ("0" + seconds).slice(-2);
+
+          // Обновляем текст в элементе таймера
+          timerElement.textContent = formattedMinutes + ":" + formattedSeconds;
+
+          // Уменьшаем время на 1 секунду
+          timeLeft--;
+
+          // Проверяем, если время закончилось, останавливаем таймер
+          if (timeLeft < 0) {
+            clearInterval(timerInterval);
+            playSound1();
+            // timerElement.textContent = "Время вышло!";
+            timeroff();
+          }
+        }
+
+        // Запускаем таймер каждую секунду
+        var timerInterval = setInterval(updateTimer, 1000);
+
+      }
+      function playSound1() {
+        const audio = document.getElementById('sound');
+        audio.play();
+      }
+      // button.addEventListener("click", button_hide(), timerfnc());
+
+      playSound1();
+      // setTimeout(() => {
+      //     console.log("After 500 milliseconds");
+      // }, 500);
+      button_hide();
+      timerfnc();
+
+    }
+    console.error = function () { };
+
+
+    //таймер вручную
+
+    var button = document.getElementById("startbtn");
+    var timer = document.getElementById("timer");
+    var loader = document.getElementById("loader");
+    var timerof = document.getElementById("timeroff");
+
+    function button_hide() {
+      button.style.display = "none";
+      timer.style.display = "block";
+      loader.style.display = "block";
+
+    }
+    function backtostart() {
+      timerof.style.display = "none";
+      button.style.display = "block";
+    }
+    function timeroff() {
+      timerof.style.display = 'block';
+      timer.style.display = 'none';
+    }
+    function timerfnc() {
+      // Устанавливаем время в секундах
+      var timeLeft = 120;
+
+      // Функция для обновления таймера
+      function updateTimer() {
+        // Получаем элемент с id "timer"
+        var timerElement = document.getElementById("timer");
+
+        // Вычисляем минуты и секунды
+        var minutes = Math.floor(timeLeft / 60);
+        var seconds = timeLeft % 60;
+
+        // Добавляем ведущий ноль, если значение минут или секунд меньше 10
+        var formattedMinutes = ("0" + minutes).slice(-2);
+        var formattedSeconds = ("0" + seconds).slice(-2);
+
+        // Обновляем текст в элементе таймера
+        timerElement.textContent = formattedMinutes + ":" + formattedSeconds;
+
+        // Уменьшаем время на 1 секунду
+        timeLeft--;
+
+        // Проверяем, если время закончилось, останавливаем таймер
+        if (timeLeft < 0) {
+          clearInterval(timerInterval);
+          playSound1();
+          // timerElement.textContent = "Время вышло!";
+          timeroff();
+        }
+      }
+
+      // Запускаем таймер каждую секунду
+      var timerInterval = setInterval(updateTimer, 1000);
+
+    }
+    function playSound1() {
+      const audio = document.getElementById('sound');
+      audio.play();
+    }
+    // button.addEventListener("click", button_hide(), timerfnc());
+    button.addEventListener("click", function () {
+      // button_hide();
+      // timerfnc();
+      // playSound1();
+      timer_start_from_cpl();
+    });
+
+    class Itogo {
+      constructor(teamName) {
+        this.teamName = teamName;
+        this.container = document.createElement('div');
+        this.container.className = 'Itogo';
+
+        // Создаем элемент img
+        this.image = document.createElement('img');
+        this.image.src = 'imggg.png';
+        this.image.className = 'rotating';
+        this.image.id = 'rtr'; // Добавляем класс для анимации
+
+        // Добавляем обработчик события для перехода на другую страницу при клике на изображение
+        this.image.onclick = function () {
+          // window.location.href = 'index2.html';
+
+          showwinner();
+        };
+      }
+
+      show() {
+        var mainbg = document.getElementsByClassName("main_background");
+        // mainbg.style.boxShadow = 'none';
+        // Добавляем изображение в контейнер
+        this.container.appendChild(this.image);
+
+        // Добавляем текст "Судьи принимают решение..."
+        var decisionText = document.createElement('div');
+        decisionText.innerText = 'Судьи принимают решение...';
+        decisionText.className = 'decision-text'; // Добавляем класс для текста
+        this.container.appendChild(decisionText);
+
+        // Добавляем текст с названием команды
+        var teamText = document.createElement('div');
+        this.container.appendChild(teamText);
+
+        // Добавьте дополнительные элементы или логику по необходимости
+
+        // Добавляем контейнер в тело документа
+        document.body.appendChild(this.container);
+      }
+    }
+    function showItogo() {
+      var main_back = document.getElementById("mainbg");
+      main_back.style.boxShadow = "none";
+
+      // var circles = document.getElementsByClassName("circles");
+      // circles.style.zIndex = 11004;
+      var circles = document.querySelectorAll('.circles');
+
+      // Set the z-index property of each element
+      for (var i = 0; i < circles.length; i++) {
+        circles[i].style.zIndex = 99; // You can replace 1000 with any integer value
+      }
+
+      // Создаем объект класса Itogo
+      var itogoInstance = new Itogo();
+      buttonClicked = false;
+      // Обработка нажатия кнопки
+
+      // Вызываем метод show() для отображения Itogo
+      itogoInstance.show();
+
+    }
+    function showwinner() {
+      var circles = document.querySelectorAll('.circles li');
+      for (var i = 0; i < circles.length; i++) {
+        circles[i].style.backgroundImage = 'url("korona.png")';
+      }
+      this.image = document.createElement('img');
+      this.image.src = 'blue.png';
+      this.image.className = 'blue_back_for_winner';
+      this.image.id = 'loading_next';
+      document.body.appendChild(this.image);
+      this.image = document.createElement('img');
+      this.image.src = 'korona.png';
+      this.image.className = 'koronapng';
+      document.body.appendChild(this.image);
+      var data2 = document.getElementById("datateam2");
+      data2.style.display = "block";
+      document.body.appendChild(data2);
+      var final_winner_score_lbl = document.getElementById("final_winner_score");
+      final_winner_score_lbl.style.display = 'block';
+      document.body.appendChild(final_winner_score_lbl);
+      var winnlabel = document.getElementById("finalwinner");
+      winnlabel.style.display = "block";
+      document.body.appendChild(winnlabel);
+      buttonClicked = false;
+      this.image.onclick = function () {
+        showloading()
+      }
+
+    }
+    function showloading() {
+      this.image = document.createElement('img');
+      buttonClicked = false;
+      this.image.src = 'blue.png';
+      this.image.className = 'blue_back_for_loading';
+      document.body.appendChild(this.image);
+      this.image = document.createElement('img');
+      this.image.src = 'korona.png';
+      this.image.className = 'koronapng';
+      document.body.appendChild(this.image);
+      this.image1 = document.createElement('img');
+      this.image1.src = 'imggg.png';
+      this.image1.className = 'rotating_on_loading';
+      this.image1.id = 'rtr';
+      // this.image1.addEventListener('click', function ())        
+      // }
+      this.image1.onclick = function () {
+        restart();
+      }
+      document.body.appendChild(this.image1)
+      var decisionText = document.createElement('div');
+      decisionText.innerText = 'Следующий матч скоро начнётся...';
+      decisionText.className = 'decision_text_on_loading'; // Добавляем класс для текста
+      document.body.appendChild(decisionText);
+      var circles = document.querySelectorAll('.circles li');
+      for (var i = 0; i < circles.length; i++) {
+        circles[i].style.backgroundImage = 'url("imggg.png")';
+      }
+      // var data2 = document.getElementById("datateam2");
+      // data2.style.display = "block";
+      // document.body.appendChild(data2);
+      // var winnlabel = document.getElementById("finalwinner");
+      // winnlabel.style.display = "block";
+      // document.body.appendChild(winnlabel);
+    }
+    function restart() {
+      window.location.reload();
+    }
+
+  </script>
+
+
+</body>
+
+</html>
