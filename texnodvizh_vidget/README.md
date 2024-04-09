@@ -1,2 +1,0 @@
-# texnodvizh_vidget
- 
